@@ -11,13 +11,11 @@ const handleReady = () => {
   success("Logged into Whatsapp");
 };
 
-const wClient = () => {
-  const client = new Client({
-    authStrategy: new LocalAuth(),
-  });
-  client.on("qr", handleQR);
-  client.on("ready", handleReady);
-  client.initialize();
-};
+const client = new Client({
+  authStrategy: new LocalAuth(),
+});
+//   client.on("qr", handleQR);
+client.on("ready", handleReady);
+client.initialize();
 
-module.exports = wClient;
+module.exports = client;
