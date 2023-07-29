@@ -19,9 +19,7 @@ app.use("/assets", express.static(__dirname + "public/assets"));
 app.set("views", "./views");
 app.set("view engine", "ejs");
 
-app.get("/", (req, res) => {
-  res.render("index");
-});
+app.use("/", require("./routes"));
 
 server.listen(port, () => {
   success(`Server running on http://localhost:${port}`);
