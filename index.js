@@ -4,11 +4,13 @@ const dotenv = require("dotenv");
 const { logger } = require("./utils");
 const { log, success, err, warn } = logger;
 const socketIO = require("./socket");
+const wClient = require("./whatsapp");
 
 dotenv.config();
 const app = express();
 const server = http.createServer(app);
 socketIO(server);
+wClient();
 const port = process.env.PORT || 8000;
 
 app.use(express.static("public"));
