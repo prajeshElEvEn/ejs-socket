@@ -4,19 +4,18 @@ const client = require("../whatsapp");
 const { log, warn, err, success } = logger;
 const qrcode = require("qrcode");
 
-const onConnection = async (socket) => {
-  log(`${socket.id} user connected`);
-  socket.on("disconnect", () => {
-    warn(`${socket.id} disconnected!`);
-  });
-};
 const socketIO = (server) => {
   const io = new Server(server, {
     cors: {
       origin: "*",
     },
   });
-  io.on("connection", onConnection);
+  io.on("connection", (socket) => {
+    log(`${socket.id} user connected`);
+    socket.on("disconnect", () => {
+      warn(`${socket.id} disconnected!`);
+    });
+  });
   client.on("qr", (qr) => {
     log(qr);
     qrcode.toDataURL(qr, (err, url) => {
@@ -26,6 +25,15 @@ const socketIO = (server) => {
         io.emit("qrCodeUrl", url);
       }
     });
+  });
+  client.on("ready", () => {
+    io.emit("loggedIn");
+  });
+  client.on("auth_failure", (error) => {
+    io.emit("authFailed:", error);
+  });
+  client.on("disconnected", () => {
+    io.emit("loggedOut");
   });
 };
 
